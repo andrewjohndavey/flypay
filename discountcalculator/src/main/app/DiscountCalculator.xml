@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:api-platform-gw="http://www.mulesoft.org/schema/mule/api-platform-gw" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/api-platform-gw http://www.mulesoft.org/schema/mule/api-platform-gw/current/mule-api-platform-gw.xsd">
+    <http:listener-config name="DiscountCalculator-httpListenerConfig" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <apikit:config name="DiscountCalculator-config" raml="DiscountCalculator.raml" consoleEnabled="false" doc:name="Router"/>
+    <api-platform-gw:api apiName="DiscountCalculator" version="1.0" flowRef="DiscountCalculator-main" create="true" apikitRef="DiscountCalculator-config" doc:name="API Autodiscovery">
+        <api-platform-gw:description>Calculate Discount</api-platform-gw:description>
+    </api-platform-gw:api>
+    <flow name="DiscountCalculator-main">
+        <http:listener config-ref="DiscountCalculator-httpListenerConfig" path="/api/*" doc:name="HTTP"/>
+        <apikit:router config-ref="DiscountCalculator-config" doc:name="APIkit Router"/>
+        <exception-strategy ref="DiscountCalculator-apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy"/>
+    </flow>
+    <flow name="DiscountCalculator-console">
+        <http:listener config-ref="DiscountCalculator-httpListenerConfig" path="/console/*" doc:name="HTTP"/>
+        <apikit:console config-ref="DiscountCalculator-config" doc:name="APIkit Console"/>
+    </flow>
+    <flow name="post:/discount:DiscountCalculator-config">
+        <logger message="Transforming Total" level="INFO" doc:name="Logger"/>
+        <dw:transform-message doc:name="Calculate Total Amount" metadata:id="5bc3b94f-1658-4e13-8875-48f1a671d92a">
+            <dw:input-payload mimeType="application/json" doc:sample="chequeObject.json"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	tableCode: payload01.tableCode,
+	checkNumber: payload01.checkNumber,
+	locationId: payload01.locationId,
+	staff: payload01.staff,
+	guests: payload01.guests,
+	status: payload01.status,
+	totalAmount: (payload01.menuItems map (object, index) ->
+  		object.quantity * object.price) reduce ($$ + $),
+	outstandingAmount: payload01.outstandingAmount,
+	serviceChargeAmount: payload01.serviceChargeAmount,
+	tipsPaid: payload01.tipsPaid,
+	menuItems: payload01.menuItems map ((menuItem , indexOfMenuItem) -> {
+		itemId: menuItem.itemId,
+		name: menuItem.name,
+		quantity: menuItem.quantity,
+		price: menuItem.price,
+		priceSold: menuItem.priceSold,
+		discount: menuItem.discount,
+		category: menuItem.category,
+		modifiers: menuItem.modifiers,
+		staff: menuItem.staff
+	}),
+	(discounts: payload01.discounts map ((discount , indexOfDiscount) -> discount)) when payload01.discounts != null,
+	existsInDatabase: payload01.existsInDatabase,
+	suppressFakeServiceChargeFlag: payload01.suppressFakeServiceChargeFlag,
+	(loyaltyCards: payload01.loyaltyCards map ((loyaltyCard , indexOfLoyaltyCard) -> loyaltyCard)) when payload01.loyaltyCards != null,
+	forceClose: payload01.forceClose
+})]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <apikit:mapping-exception-strategy name="DiscountCalculator-apiKitGlobalExceptionMapping">
+        <apikit:mapping statusCode="404">
+            <apikit:exception value="org.mule.module.apikit.exception.NotFoundException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Resource not found&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="405">
+            <apikit:exception value="org.mule.module.apikit.exception.MethodNotAllowedException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Method not allowed&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="415">
+            <apikit:exception value="org.mule.module.apikit.exception.UnsupportedMediaTypeException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Unsupported media type&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="406">
+            <apikit:exception value="org.mule.module.apikit.exception.NotAcceptableException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Not acceptable&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="400">
+            <apikit:exception value="org.mule.module.apikit.exception.BadRequestException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Bad request&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+    </apikit:mapping-exception-strategy>
+</mule>

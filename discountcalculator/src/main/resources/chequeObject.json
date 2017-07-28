@@ -1,0 +1,93 @@
+                          [
+                            {
+                              "tableCode": 1,
+                              "checkNumber": 3950,
+                              "staff": {
+                                "name": "Shady S",
+                                "posUserId": "1234"
+                              },
+                              "guests": 2,
+                              "status": "OPEN",
+                              "outstandingAmount": 4638,
+                              "serviceChargeAmount": 538,
+                              "menuItems": [
+                                {
+                                  "name": "Guac n Chips",
+                                  "quantity": 1,
+                                  "price": 385,
+                                  "priceSold": 385,
+                                  "categories": "Extras"
+                                },
+                                {
+                                  "name": "Chick Taco",
+                                  "quantity": 1,
+                                  "price": 410,
+                                  "priceSold": 410,
+                                  "categories": "Extras"
+                                },
+                                {
+                                  "name": "MSC Her Tost",
+                                  "quantity": 1,
+                                  "price": 415,
+                                  "priceSold": 415,
+                                  "categories": "Extras"
+                                },
+                                {
+                                  "name": "MSC Her Tost",
+                                  "quantity": 1,
+                                  "price": 415,
+                                  "priceSold": 415,
+                                  "categories": "Extras"
+                                },
+                                {
+                                  "name": "Cheese Ques",
+                                  "quantity": 1,
+                                  "price": 300,
+                                  "priceSold": 300,
+                                  "categories": "Extras"
+                                },
+                                {
+                                  "name": "Cheese Ques",
+                                  "quantity": 1,
+                                  "price": 300,
+                                  "priceSold": 300,
+                                  "categories": "Extras"
+                                },
+                                {
+                                  "name": "MSC Her Tost",
+                                  "quantity": 1,
+                                  "price": 415,
+                                  "priceSold": 415,
+                                  "categories": "Extras"
+                                },
+                                {
+                                  "name": "MSC Her Tost",
+                                  "quantity": 1,
+                                  "price": 415,
+                                  "priceSold": 415,
+                                  "categories": "Extras"
+                                },
+                                {
+                                  "name": "MSC Her Tost",
+                                  "quantity": 1,
+                                  "price": 415,
+                                  "priceSold": 415,
+                                  "categories": "Extras"
+                                },
+                                {
+                                  "name": "MSC Her Tost",
+                                  "quantity": 1,
+                                  "price": 415,
+                                  "priceSold": 415,
+                                  "categories": "Extras"
+                                },
+                                {
+                                  "name": "MSC Her Tost",
+                                  "quantity": 1,
+                                  "price": 415,
+                                  "priceSold": 415,
+                                  "categories": "Extras"
+                                }
+                              ]
+                            }
+                          ]
