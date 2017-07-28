@@ -21,8 +21,9 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
     </flow>
     <flow name="get:/cheque:api-config">
         <logger message="Before HTTP Request" level="INFO" doc:name="Logger"/>
-        <http:request config-ref="HTTP_Request_Configuration" path="/locations/xT7ryGBT/tables/1" method="GET" doc:name="HTTP">
+        <http:request config-ref="HTTP_Request_Configuration" path="/locations/xT7ryGBT/tables/{tableId}" method="GET" doc:name="HTTP">
             <http:request-builder>
+                <http:uri-param paramName="tableId" value="#[message.inboundProperties.'http.query.params'.tableId]"/>
                 <http:header headerName="Api-Key" value="3a6860600e41441baa8b604bbf2fe458"/>
             </http:request-builder>
         </http:request>
