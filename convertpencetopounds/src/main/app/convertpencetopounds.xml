@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:api-platform-gw="http://www.mulesoft.org/schema/mule/api-platform-gw" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:api-platform-gw="http://www.mulesoft.org/schema/mule/api-platform-gw" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
-http://www.mulesoft.org/schema/mule/api-platform-gw http://www.mulesoft.org/schema/mule/api-platform-gw/current/mule-api-platform-gw.xsd">
+http://www.mulesoft.org/schema/mule/api-platform-gw http://www.mulesoft.org/schema/mule/api-platform-gw/current/mule-api-platform-gw.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
     <http:listener-config name="convertpencetopounds-httpListenerConfig" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
     <apikit:config name="convertpencetopounds-config" raml="convertpencetopounds.raml" consoleEnabled="false" doc:name="Router"/>
     <api-platform-gw:api apiName="Convert pence to pounds" version="1.0" flowRef="convertpencetopounds-main" create="true" apikitRef="convertpencetopounds-config" doc:name="API Autodiscovery">
@@ -19,7 +20,7 @@ http://www.mulesoft.org/schema/mule/api-platform-gw http://www.mulesoft.org/sche
         <http:listener config-ref="convertpencetopounds-httpListenerConfig" path="/console/*" doc:name="HTTP"/>
         <apikit:console config-ref="convertpencetopounds-config" doc:name="APIkit Console"/>
     </flow>
-    <flow name="post:/converion:convertpencetopounds-config">
+    <flow name="post:/conversion:convertpencetopounds-config">
         <dw:transform-message doc:name="Convert pence to pounds">
             <dw:input-payload doc:sample="sample_data/list_json.json"/>
             <dw:set-payload><![CDATA[%dw 1.0
@@ -36,7 +37,6 @@ payload map ((payload01 , indexOfPayload01) -> {
 	outstandingAmount: payload01.outstandingAmount,
 	serviceChargeAmount: payload01.serviceChargeAmount,
 	tipsPaid: payload01.tipsPaid,
-	discounts: payload01.discounts map ((discount , indexOfDiscount) -> discount),
 	menuItems: payload01.menuItems map ((menuItem , indexOfMenuItem) -> {
 		itemId: menuItem.itemId,
 		name: menuItem.name,
@@ -48,9 +48,10 @@ payload map ((payload01 , indexOfPayload01) -> {
 		modifiers: menuItem.modifiers,
 		staff: menuItem.staff
 	}),
+	(discounts: payload01.discounts map ((discount , indexOfDiscount) -> discount)) when payload01.discounts != null,
 	existsInDatabase: payload01.existsInDatabase,
 	suppressFakeServiceChargeFlag: payload01.suppressFakeServiceChargeFlag,
-	loyaltyCards: payload01.loyaltyCards map ((loyaltyCard , indexOfLoyaltyCard) -> loyaltyCard),
+	(loyaltyCards: payload01.loyaltyCards map ((loyaltyCard , indexOfLoyaltyCard) -> loyaltyCard)) when payload01.loyaltyCards != null,
 	forceClose: payload01.forceClose
 })]]></dw:set-payload>
         </dw:transform-message>
