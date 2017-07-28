@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+    <http:request-config name="HTTP_Request_Configuration" host="flypaygetchequeprocess.cloudhub.io" port="80" basePath="/api" doc:name="HTTP Request Configuration"/>
+    <http:request-config name="HTTP_flypaygetchequeprocess_request" host="flypaygetchequeprocess.cloudhub.io" port="80" basePath="/api" doc:name="HTTP Request Configuration" >
+        <http:raml-api-configuration location="http://flypaygetchequeprocess.cloudhub.io/api"/>
+    </http:request-config>
+    <flow name="pollerFlow">
+        <poll doc:name="Poll">
+            <fixed-frequency-scheduler frequency="5000"/>
+            <logger message="HELLO" level="INFO" doc:name="Logger"/>
+        </poll>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <http:request config-ref="HTTP_flypaygetchequeprocess_request" path="/cheque" method="GET" doc:name="Get Cheque Process API Call">
+            <http:request-builder>
+                <http:query-param paramName="tableId" value="1"/>
+                <http:query-param paramName="posType" value="micros"/>
+            </http:request-builder>
+        </http:request>
+        <logger level="INFO" doc:name="Logger" message="#[message.payloadAs(java.lang.String)]"/>
+    </flow>
+</mule>

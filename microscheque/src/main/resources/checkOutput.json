@@ -1,0 +1,56 @@
+{
+	"comment": null,
+	"id": "17",
+	"name": "Pacifico Clara",
+	"price_level": "1",
+	"price_per_unit": 400,
+	"quantity": 1,
+	"sent": true,
+	"_links": {
+		"discounts": {
+			"href": "https://api.omnivore.io/0.1/locations/6ij9rnqi/tickets/7949/items/17/discounts/",
+			"profile": "https://panel.omnivore.io/docs/api#discount_list"
+		},
+		"menu_item": {
+			"href": "https://api.omnivore.io/0.1/locations/6ij9rnqi/menu/items/342/",
+			"profile": "https://panel.omnivore.io/docs/api#menu-item_retrieve"
+		},
+		"modifiers": {
+			"href": "https://api.omnivore.io/0.1/locations/6ij9rnqi/tickets/7949/items/17/modifiers/",
+			"profile": "https://panel.omnivore.io/docs/api#modifier_list"
+		},
+		"self": {
+			"etag": "254e8599595b86172b7d29fe5d6a0878",
+			"href": "https://api.omnivore.io/0.1/locations/6ij9rnqi/tickets/7949/items/17/",
+			"profile": "https://panel.omnivore.io/docs/api#item_retrieve"
+		}
+	},
+	"_embedded": {
+		"discounts": [],
+		"menu_item": {
+			"id": "342",
+			"in_stock": true,
+			"modifier_groups_count": 1,
+			"name": "Pacifico Clara",
+			"open": false,
+			"pos_id": "342",
+			"price": 400,
+			"price_levels": [{
+				"id": "1",
+				"price": 400
+			}],
+			"v1_id": "342",
+			"_links": {
+				"modifier_groups": {
+					"href": "https://api.omnivore.io/0.1/locations/6ij9rnqi/menu/items/342/modifier_groups/",
+					"profile": "https://panel.omnivore.io/docs/api#modifier-group_list"
+				},
+				"self": {
+					"etag": "76cbb3564b69718b36f793cb8457169b",
+					"href": "https://api.omnivore.io/0.1/locations/6ij9rnqi/menu/items/342/",
+					"profile": "https://panel.omnivore.io/docs/api#menu-item_retrieve"
+				}
+			}
+		}
+	}
+}

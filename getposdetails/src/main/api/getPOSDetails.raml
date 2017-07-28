@@ -1,0 +1,24 @@
+#%RAML 0.8
+title: GetPOSDetails
+version: 0.1
+baseUri: "http://getposdetails.cloudhub.io/api"
+/posDetails:
+  get:
+    description: This will retrieve the POS details for a given POS
+    queryParameters: 
+      posType:
+        displayName: POS Type
+        required: true
+        type: string
+        example: "micros"
+    responses: 
+      200:
+        body: 
+          application/json:
+            example: |
+              [
+              {
+              "connectionAPI": "myterminal.cloudhub.io/api/*",
+              "moneyFormat": "pence"
+              }
+              ]

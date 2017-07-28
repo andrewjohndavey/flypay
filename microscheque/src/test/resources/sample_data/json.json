@@ -1,0 +1,29 @@
+{
+  "_embedded": {
+    "open_tickets": [
+      {
+        
+      }
+    ],
+    "revenue_center": {
+      "_links": {
+        
+      },
+      "default": true,
+      "id": "????",
+      "name": "????"
+    }
+  },
+  "_links": {
+    "self": {
+      "etag": "????",
+      "href": "????",
+      "profile": "????"
+    }
+  },
+  "available": true,
+  "id": "????",
+  "name": "????",
+  "number": 1,
+  "seats": 1
+}
