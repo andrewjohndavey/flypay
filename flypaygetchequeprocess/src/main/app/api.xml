@@ -26,6 +26,9 @@ http://www.mulesoft.org/schema/mule/api-platform-gw http://www.mulesoft.org/sche
     <api-platform-gw:api apiName="Flypay Get Cheque Process" version="1.0" flowRef="api-main" create="true" apikitRef="api-config" doc:name="API Autodiscovery">
         <api-platform-gw:description>Get Cheque Process</api-platform-gw:description>
     </api-platform-gw:api>
+    <http:request-config name="HTTP_Request_Configuration3" host="convertpencetopounds.cloudhub.io" port="80" basePath="/api" doc:name="HTTP Request Configuration">
+        <http:raml-api-configuration location="http://convertpencetopounds.cloudhub.io/api"/>
+    </http:request-config>
     <flow name="api-main">
         <http:listener config-ref="api-httpListenerConfig" path="/api/*" doc:name="HTTP" />
         <apikit:router config-ref="api-config" doc:name="APIkit Router" />
@@ -64,6 +67,8 @@ payload[0].moneyFormat]]></dw:set-variable>
             </http:request-builder>
         </http:request>
         <http:request config-ref="HTTP_Request_Configuration4" path="/discount" method="POST" doc:name="Calculate Discount API"/>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <http:request config-ref="HTTP_Request_Configuration3" path="/converion" method="POST" doc:name="Convert pence to pounds API"/>
         <async doc:name="Update Database Asynchronously">
             <http:request config-ref="HTTP_PopulatePOS" path="/populateDatabase" method="POST" doc:name="Update Database"/>
         </async>
